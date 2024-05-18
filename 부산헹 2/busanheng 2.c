@@ -3,11 +3,29 @@
 #include<stdlib.h>
 #include<time.h>
 #include<Windows.h>
-
-#define MIN_TRAIN_LENGTH 15
+//파라미터
+#define MIN_TRAIN_LENGTH 15 //기차 길이
 #define MAX_TRAIN_LENGTH 50
-#define MIN_PROBABILITY 10
+#define MIN_STM 0 //마동석 체력
+#define MAX_STM 5
+#define MIN_PROBABILITY 10 //확률
 #define MAX_PROBABILITY 90
+#define MIN_AGGRO 0 //어그로 범위
+#define MAX_AGGRO 5
+
+//마동석 이동 방향
+#define MOVE_LEFT 1
+#define MOVE_STAY 0
+
+//좀비의 공격대상
+#define ATK_NONE 0
+#define ATK_CITIZEN 1
+#define ATK_DONGSEOK 2
+
+//마동석 행동
+#define ACTION_REST 0
+#define ACTION_PROVOKE 1
+#define ACTION_PULL 2
 
 void getInput(int* trainLength, int* Probability);
 void printTrain(int trainLength, int citizenPos, int zombiePos);
