@@ -27,6 +27,11 @@
 #define ACTION_PROVOKE 1
 #define ACTION_PULL 2
 
+//전역 변수
+int train_length, probality;
+int pre_citizen_pos, pre_zombie_pos;
+int train[MAX_TRAIN_LENGTH];
+
 void getInput(int* trainLength, int* Probability);
 void printTrain(int trainLength, int citizenPos, int zombiePos);
 
