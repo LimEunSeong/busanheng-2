@@ -36,12 +36,15 @@ int numZombies = 1;
 //함수 선언
 void getInput(int* trainLength, int* Probability, int* stamina);
 void printTrain(int trainLength, int citizenPos, int zombiePos, int dongseokPos, int stamina);
-void intro();
-void outro();
 void gameLoop(int trainLength, int Probability, int stamina);
 void moveCitizen(int* citizenPos, int Probability);
 void moveZombie(int* zombiePos, int trainLength, int Probability, int* zombieMoveCounter);
 void moveDongseok(int* dongseokpos, int* stamina);
+void performDongseokAction(int* dongseokPos, int* stamina, int citizenPos, int zombiePos);
+int getDongseokAction();
+void rest(int* dongseokPos, int* stamina);
+void provoke(int zombiePos, int* dongseokPos);
+void pull(int* citizenPos, int* dongseokPos);
 void checkGameOver(int citizenPos, int zombiePos);
 
 void main() {
@@ -49,28 +52,12 @@ void main() {
 
     srand(time(NULL));
 
-    intro();
 
     getInput(&trainLength, &Probability, &stamina);
     gameLoop(trainLength, Probability, stamina);
 
-    outro();
 }
 
-void intro() {
-    printf("**************************\n");
-    printf("잠시 후 게임을 시작합니다.\n");
-    printf("**************************\n");
-    Sleep(1500); // 1.5초 동안 프로그램 멈추기
-    system("cls"); // 출력된 내용 지우기
-}
-
-void outro() {
-    printf("**********************\n");
-    printf("게임이 종료되었습니다.\n");
-    printf("**********************\n");
-    Sleep(4000);
-}
 void getInput(int* trainLength, int* Probability, int* stamina) {
     do {
         printf("train length(%d~%d) >> ", MIN_TRAIN_LENGTH, MAX_TRAIN_LENGTH);
@@ -102,9 +89,6 @@ void printTrain(int trainLength, int citizenPos, int zombiePos, int dongseokPos,
 
     for (int i = 0; i < trainLength; i++) printf("#");
     printf("\n");
-
-    printf("Citizen Position: %d(Aggro: 1)\n", citizenPos);
-    printf("Dongseok Position: %d (Aggro: 1, stamina: %d)\n", dongseokPos, stamina);
 }
 void gameLoop(int trainLength, int Probability, int stamina) {
     int citizenPos = trainLength - 6;
@@ -151,13 +135,65 @@ void moveZombie(int* zombiePos, int trainLength, int Probability, int* zombieMov
     (*zombieMoveCounter)++;
 }
 void moveDongseok(int* dongseokPos, int* stamina) {
-    if(*stamina > 0){
+    int dongseokMove;
+    do {
+        printf("Dongseok move(left: 1, stay:0) >>");
+        scanf_s("%d", &dongseokMove);
+    } while (dongseokMove != MOVE_LEFT && dongseokMove != MOVE_STAY);
+
+    if (dongseokMove == MOVE_LEFT && *stamina > 0) {
         *dongseokPos -= 1;
         (*stamina)--;
-        printf("Dongseok: %d->%d (Aggro: 1, Stamina: %d)\n", *dongseokPos + 1, *dongseokPos, *stamina);
+        printf("Dongseok: % d-> % d(Aggro: 1, Stamina: %d)\n", *dongseokPos + 1, *dongseokPos, *stamina);
     }
     else {
-        printf("Dongseok: stay %d(Aggro : 1, Stamina: %d\n", *dongseokPos, *stamina);
+        printf("Dongseok: stay %d(Aggro: 1, Stamina: %d)\n", *dongseokPos, *stamina);
+    }
+}
+void performDongseokAction(int* dongseokPos, int* stamina, int citizenPos, int zombiePos) {
+    int action = getDongseokAction();
+
+    switch (action) {
+    case ACTION_REST:
+        rest(dongseokPos, stamina);
+        break;
+    case ACTION_PROVOKE:
+        provoke(zombiePos, dongseokPos);
+        break;
+    default:
+        break;
+    }
+}
+int getDongseokAction() {
+    int action;
+    do {
+        printf("citizen does nothing\n");
+        printf("zombie attacked nobody\n");
+        printf("Dongseok action (rest: 0, provoke: 1)>> ");
+        scanf_s("%d", &action);
+    } while (action != ACTION_REST && action != ACTION_PROVOKE);
+    return action;
+}
+void rest(int* dongseokPos, int* stamina) {
+    *stamina = (*stamina < MAX_STM) ? *stamina + 1 : *stamina;
+    printf("dongseok rest...\n");
+    printf("dongseok: %d(stamina: %d)\n", *dongseokPos, *stamina);
+}
+void provoke(int zombiePos, int* dongseokPos) {
+    if (*dongseokPos == zombiePos - 1) {
+        printf("Dongseok provokes the zombie.\n");
+    }
+    else {
+        printf("Dongseok is too far to provoke the zombie.\n");
+    }
+}
+void pull(int* citizenPos, int* dongseokPos) {
+    if (*dongseokPos == *citizenPos - 1) {
+        *citizenPos = *dongseokPos - 1;
+        printf("Dongseok pulls the citizen to safety. Citizen Position: %d\n", *citizenPos);
+    }
+    else {
+        printf("Dongseok is too far to pull the citizen.\n");
     }
 }
 void checkGameOver(int citizenPos, int zombiePos) {
