@@ -1,4 +1,3 @@
-//1-1 준비
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
@@ -36,12 +35,13 @@ int numZombies = 1;
 
 //함수 선언
 void getInput(int* trainLength, int* Probability, int* stamina);
-void printTrain(int trainLength, int citizenPos, int zombiePos);
+void printTrain(int trainLength, int citizenPos, int zombiePos, int dongseokPos, int stamina, int dongseokAggro, int citizenAggro);
 void intro();
 void outro();
 void gameLoop(int trainLength, int Probability, int stamina);
 void moveCitizen(int* citizenPos, int Probability);
 void moveZombie(int* zombiePos, int trainLength, int Probability, int* zombieMoveCounter);
+void moveDongseok(int* dongseokpos, int* stamina);
 void checkGameOver(int citizenPos, int zombiePos);
 
 void main() {
@@ -56,8 +56,8 @@ void main() {
 
     outro();
 }
+
 void intro() {
-    //인트로
     printf("**************************\n");
     printf("잠시 후 게임을 시작합니다.\n");
     printf("**************************\n");
@@ -66,7 +66,6 @@ void intro() {
 }
 
 void outro() {
-    //아웃트로
     printf("**********************\n");
     printf("게임이 종료되었습니다.\n");
     printf("**********************\n");
@@ -84,37 +83,42 @@ void getInput(int* trainLength, int* Probability, int* stamina) {
     } while (*stamina < MIN_STM || *stamina > MAX_STM);
 
     do {
-        printf("probability (%d~%d) >> ", MIN_PROBABILITY, MAX_PROBABILITY);
+        printf("percentile probability 'p' (%d~%d) >> ", MIN_PROBABILITY, MAX_PROBABILITY);
         scanf_s("%d", Probability);
     } while (*Probability < MIN_PROBABILITY || *Probability > MAX_PROBABILITY);
     system("cls");
 }
 //열차 초기 상태 출력
-void printTrain(int trainLength, int citizenPos, int zombiePos) {
+void printTrain(int trainLength, int citizenPos, int zombiePos, int dongseokPos, int stamina, int citizenAggro, int dongseokAggro) {
     for (int i = 0; i < trainLength; i++) printf("#");
     printf("\n#");
     for (int i = 1; i < trainLength - 1; i++) {
         if (i == citizenPos) printf("C");
         else if (i == zombiePos) printf("Z");
-        else if (i == trainLength - 2) printf("M");
+        else if (i == dongseokPos) printf("M");
         else printf(" ");
     }
     printf("#\n");
 
     for (int i = 0; i < trainLength; i++) printf("#");
     printf("\n");
+
+    print("Citizen Position: %d(Aggro: %d)\n", citizenPos, citizenAggro);
+    print("Dongseok Position: %d (Aggro: 1, stamina: %d)\n", dongseokPos, dongseokAggro, stamina);
 }
 void gameLoop(int trainLength, int Probability, int stamina) {
     int citizenPos = trainLength - 6;
     int zombiePos = trainLength - 3;
+    int dongseokPos = trainLength - 2;
     int zombieMoveCounter = 1;
 
-    printTrain(trainLength, citizenPos, zombiePos);
+    printTrain(trainLength, citizenPos, zombiePos, dongseokPos, stamina);
 
     while (1) {
         moveCitizen(&citizenPos, Probability);
         moveZombie(&zombiePos, trainLength, Probability, &zombieMoveCounter);
-        printTrain(trainLength, citizenPos, zombiePos);
+        moveDongseok(&dongseokPos, &stamina);
+        printTrain(trainLength, citizenPos, zombiePos, dongseokPos, stamina);
         checkGameOver(citizenPos, zombiePos);
     }
 }
@@ -145,6 +149,16 @@ void moveZombie(int* zombiePos, int trainLength, int Probability, int* zombieMov
         }
     }
     (*zombieMoveCounter)++;
+}
+void moveDongseok(int* dongseokPos, int* stamina) {
+    if(*stamina > 0){
+        *dongseokPos -= 1;
+        (*stamina)--;
+        printf("Dongseok: %d->%d (Aggro: 1, Stamina: %d)\n", *dongseokPos + 1, *dongseokPos, *stamina);
+    }
+    else {
+        print("Dongseok: stay %d(Aggro : 1, Stamina: %d\n", *dongseokPos, *stamina);
+    }
 }
 void checkGameOver(int citizenPos, int zombiePos) {
     if(citizenPos <= 1) {
