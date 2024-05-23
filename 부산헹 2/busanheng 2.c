@@ -35,7 +35,7 @@ int numZombies = 1;
 
 //함수 선언
 void getInput(int* trainLength, int* Probability, int* stamina);
-void printTrain(int trainLength, int citizenPos, int zombiePos, int dongseokPos, int stamina, int dongseokAggro, int citizenAggro);
+void printTrain(int trainLength, int citizenPos, int zombiePos, int dongseokPos, int stamina);
 void intro();
 void outro();
 void gameLoop(int trainLength, int Probability, int stamina);
@@ -89,7 +89,7 @@ void getInput(int* trainLength, int* Probability, int* stamina) {
     system("cls");
 }
 //열차 초기 상태 출력
-void printTrain(int trainLength, int citizenPos, int zombiePos, int dongseokPos, int stamina, int citizenAggro, int dongseokAggro) {
+void printTrain(int trainLength, int citizenPos, int zombiePos, int dongseokPos, int stamina) {
     for (int i = 0; i < trainLength; i++) printf("#");
     printf("\n#");
     for (int i = 1; i < trainLength - 1; i++) {
@@ -103,8 +103,8 @@ void printTrain(int trainLength, int citizenPos, int zombiePos, int dongseokPos,
     for (int i = 0; i < trainLength; i++) printf("#");
     printf("\n");
 
-    print("Citizen Position: %d(Aggro: %d)\n", citizenPos, citizenAggro);
-    print("Dongseok Position: %d (Aggro: 1, stamina: %d)\n", dongseokPos, dongseokAggro, stamina);
+    printf("Citizen Position: %d(Aggro: 1)\n", citizenPos);
+    printf("Dongseok Position: %d (Aggro: 1, stamina: %d)\n", dongseokPos, stamina);
 }
 void gameLoop(int trainLength, int Probability, int stamina) {
     int citizenPos = trainLength - 6;
@@ -157,7 +157,7 @@ void moveDongseok(int* dongseokPos, int* stamina) {
         printf("Dongseok: %d->%d (Aggro: 1, Stamina: %d)\n", *dongseokPos + 1, *dongseokPos, *stamina);
     }
     else {
-        print("Dongseok: stay %d(Aggro : 1, Stamina: %d\n", *dongseokPos, *stamina);
+        printf("Dongseok: stay %d(Aggro : 1, Stamina: %d\n", *dongseokPos, *stamina);
     }
 }
 void checkGameOver(int citizenPos, int zombiePos) {
