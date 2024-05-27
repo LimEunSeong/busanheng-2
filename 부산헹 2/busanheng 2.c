@@ -96,14 +96,14 @@ void printTrain(){
     printf("citizen Aggro: %d, dongseokAggro: %d, stamina: %d\n", citizenAggro, dongseokAggro, stamina);
 }
 void gameLoop() {
-    int citizenPos = trainLength - 6;
-    int zombiePos = trainLength - 3;
-    int dongseokPos = trainLength - 2;
-    int zombieMoveCounter = 1;
-    int citizenAggro = MIN_AGGRO + 1;
-    int dongseokAggro = MIN_AGGRO + 1;
-    int pullSuccess = 0;
-    int zombieAttackTarget = ATK_NONE;
+    citizenPos = trainLength - 6;
+    zombiePos = trainLength - 3;
+    dongseokPos = trainLength - 2;
+    zombieMoveCounter = 1;
+    citizenAggro = MIN_AGGRO + 1;
+    dongseokAggro = MIN_AGGRO + 1;
+    pullSuccess = 0;
+    zombieAttackTarget = ATK_NONE;
 
     printTrain();
 
@@ -194,6 +194,9 @@ void moveDongseok() {
             printf("choose dongseok action.(stay:%d) ", MOVE_STAY);
             scanf_s("%d", &action);
         }
+        printf("dongseok: stay\n");
+        dongseokAggro = (dongseokAggro > MIN_AGGRO) ? dongseokAggro - 1 : MIN_AGGRO;
+        return;
     }
     else {
         printf("choose dongseok action.(left:%d, stay%d): ", MOVE_LEFT, MOVE_STAY);
