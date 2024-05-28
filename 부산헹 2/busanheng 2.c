@@ -47,16 +47,14 @@ void pull();
 void checkGameOver();
 
 int main() {
-    int trainLength, Probability, stamina;
-
     srand(time(NULL));
 
     printf("======================\n");
     printf("======GAME START======\n");
     printf("======================\n");
 
-    getInput(&trainLength, &Probability, &stamina);
-    gameLoop(trainLength, Probability, stamina);
+    getInput();
+    gameLoop();
 
     return 0;
 }
@@ -198,27 +196,19 @@ void moveDongseok() {
         dongseokAggro = (dongseokAggro > MIN_AGGRO) ? dongseokAggro - 1 : MIN_AGGRO;
         return;
     }
-    else {
+    do {
         printf("choose dongseok action.(left:%d, stay%d): ", MOVE_LEFT, MOVE_STAY);
         scanf_s("%d", &action);
-        while (action != MOVE_LEFT && action != MOVE_STAY) {
-            printf("choose dongseok action.(left:%d, stay%d): ", MOVE_LEFT, MOVE_STAY);
-            scanf_s("%d", &action);
-        }
-        printf("dongseok: stay\n");
-        dongseokAggro = (dongseokAggro > MIN_AGGRO) ? dongseokAggro - 1 : MIN_AGGRO;
-        return;
-    }
-    do {
-        printf("choose dongseok action(left: %d, stay: %d)", MOVE_LEFT, MOVE_STAY);
-        scanf_s("%d", &action);
     } while (action != MOVE_LEFT && action != MOVE_STAY);
-
+        
     switch (action) {
     case MOVE_LEFT:
         printf("dongseok: move left(%d -> %d)\n", dongseokPos, dongseokPos - 1);
-        (dongseokPos)--;
-        (dongseokPos)++;
+        dongseokPos--;
+        dongseokAggro++;
+        if (dongseokAggro > MAX_AGGRO) {
+            dongseokAggro = MAX_AGGRO;
+        }
         break;
     case MOVE_STAY:
         printf("dongseok: stay\n");
@@ -239,7 +229,6 @@ int getDongseokAction(int zombiePos, int dongseokPos) {
     do {
         printf("choose dongseok move(left: %d, stay: %d): ", MOVE_LEFT, MOVE_STAY);
         scanf_s("%d", &action);
-        if (action != MOVE_LEFT && action != MOVE_STAY);
     } while (action != MOVE_LEFT && action != MOVE_STAY);
     return action;
 }
@@ -257,17 +246,23 @@ void performDongseokAction() {
     int action;
     if (stamina > 0) {
         if (dongseokPos == zombiePos - 1 || dongseokPos == zombiePos + 1) {
-            printf("choose dongseok action(rest: %d, provoke: %d, pull: %d): ", ACTION_REST, ACTION_PROVOKE, ACTION_PULL);
-            scanf_s("%d", &action);
+            do {
+                printf("choose dongseok action(rest: %d, provoke: %d, pull: %d): ", ACTION_REST, ACTION_PROVOKE, ACTION_PULL);
+                scanf_s("%d", &action);
+            } while (action != ACTION_REST && action != ACTION_PROVOKE && action != ACTION_PULL);
         }
         else {
-            printf("choose dongseok action(rest: %d, provoke: %d): ", ACTION_REST, ACTION_PROVOKE);
-            scanf_s("%d", &action);
+            do {
+                printf("choose dongseok action(rest: %d, provoke: %d): ", ACTION_REST, ACTION_PROVOKE);
+                scanf_s("%d", &action);
+            } while (action != ACTION_REST && action != ACTION_PROVOKE);
         }
     }
     else {
-        printf("choose dongseok action(rest: %d, provoke: %d): ", ACTION_REST, ACTION_PROVOKE);
-        scanf_s("%d", &action);
+        do {
+            printf("choose dongseok action(rest: %d, provoke: %d): ", ACTION_REST, ACTION_PROVOKE);
+            scanf_s("%d", &action);
+        } while (action != ACTION_REST && action != ACTION_PROVOKE);
     }
     switch(action){
     case ACTION_REST:
@@ -281,6 +276,12 @@ void performDongseokAction() {
             pull();
         }
         break;
+    }
+    if (pullSuccess) {
+        printf("SUCCESS PULL! ZOMBIE CANNOT MOVE NEXT TURN.\n");
+    }
+    else {
+        printf("PULL FAILED\n");
     }
 }
 void rest() {
@@ -297,17 +298,19 @@ void provoke() {
 }
 
 void pull() {
-    printf("dongseok pull zombie\n");
+    printf("dongseok tried to pull zombie\n");
     dongseokAggro += 2;
     stamina -= 1;
 
     int success = rand() % 100 < (100 - Probability);
+    pullSuccess = success;
+
     if (success) {
-        printf("pull success!, zombie cannot move next turn.\n");
+        printf("PULL SUCCESS! zombie cannot move next turn.\n");
         pullSuccess = 1;
     }
     else {
-        printf("pull fail...\n");
+        printf("PULL FAILED...\n");
         pullSuccess = 0;
     }
     if (dongseokAggro > MAX_AGGRO) {
