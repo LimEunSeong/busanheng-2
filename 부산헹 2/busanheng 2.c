@@ -278,7 +278,7 @@ void performDongseokAction() {
         break;
     }
     if (pullSuccess) {
-        printf("SUCCESS PULL! ZOMBIE CANNOT MOVE NEXT TURN.\n");
+        printf("PULL SUCCESS! ZOMBIE CANNOT MOVE NEXT TURN.\n");
     }
     else {
         printf("PULL FAILED\n");
@@ -312,6 +312,8 @@ void pull() {
     else {
         printf("PULL FAILED...\n");
         pullSuccess = 0;
+        dongseokAggro += 2;
+        stamina -= 1;
     }
     if (dongseokAggro > MAX_AGGRO) {
         dongseokAggro = MAX_AGGRO;
