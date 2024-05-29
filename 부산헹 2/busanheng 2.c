@@ -132,7 +132,7 @@ void moveCitizen() {
         citizenAggro = (citizenAggro > MIN_AGGRO) ? citizenAggro - 1 : MIN_AGGRO;
     }
     else {
-        printf("citizen : %d->%d(aggro: %d -> %d)\n", oldPos, citizenPos, citizenAggro, citizenAggro +1);
+        printf("citizen : %d->%d(aggro: %d -> %d)\n", oldPos, citizenPos, citizenAggro, (citizenAggro < MAX_AGGRO) ? citizenAggro + 1 : MAX_AGGRO);
         citizenAggro = (citizenAggro < MAX_AGGRO) ? citizenAggro + 1 : citizenAggro;
     }
 }
