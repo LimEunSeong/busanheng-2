@@ -1,3 +1,4 @@
+// 2-2
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
@@ -321,6 +322,7 @@ void pull() {
     }
     printf("dongseok: %d (aggro: %d -> %d, stamina: %d-> %d)\n", dongseokPos, dongseokAggro - 2, dongseokAggro, stamina + 1, stamina);
 }
+
 void checkGameOver() {
     if(citizenPos <= 1) {
         printf("SUCESS!\n");
