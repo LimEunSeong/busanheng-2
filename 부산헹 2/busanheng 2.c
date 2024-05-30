@@ -58,7 +58,7 @@ int main() {
 
     return 0;
 }
-
+// 2-2 부산헹(1)에서 수정
 void getInput() {
     do {
         printf("train length(%d~%d) >> ", MIN_TRAIN_LENGTH, MAX_TRAIN_LENGTH);
@@ -66,7 +66,7 @@ void getInput() {
     } while (trainLength < MIN_TRAIN_LENGTH || trainLength > MAX_TRAIN_LENGTH);
 
     do {
-        printf("stamina(%d~%d >> ", MIN_STM, MAX_STM);
+        printf("madongseok stamina(%d~%d >> ", MIN_STM, MAX_STM);
         scanf_s("%d", &stamina);
     } while (stamina < MIN_STM || stamina > MAX_STM);
 
@@ -121,7 +121,7 @@ void gameLoop() {
         checkGameOver();
     }
 }
-
+// 2-3<이동>
 void moveCitizen() {
     int citizenMove = (rand() % 100 < Probability) ? 0 : -1;
     int oldPos = citizenPos;
@@ -136,7 +136,7 @@ void moveCitizen() {
         citizenAggro = (citizenAggro < MAX_AGGRO) ? citizenAggro + 1 : citizenAggro;
     }
 }
-
+//2-3<이동>
 void moveZombie() {
     int oldPos = zombiePos;
     zombieAttackTarget = ATK_NONE;
@@ -180,7 +180,7 @@ void moveZombie() {
     }
     zombieMoveCounter++;
 }
-
+//2-3<이동>
 void moveDongseok() {
     checkGameOver();
 
@@ -216,7 +216,7 @@ void moveDongseok() {
         break;
     }
 }
-
+//2-3<이동>
 int getDongseokAction(int zombiePos, int dongseokPos) {
     int action;
     if (zombiePos == dongseokPos + 1 || zombiePos == dongseokPos - 1) {
@@ -232,7 +232,7 @@ int getDongseokAction(int zombiePos, int dongseokPos) {
     } while (action != MOVE_LEFT && action != MOVE_STAY);
     return action;
 }
-
+//2-4<행동>
 void performDongseokAction() {
     if (zombieAttackTarget == ATK_CITIZEN) {
         printf("zombie attacked citizen\n");
@@ -284,19 +284,20 @@ void performDongseokAction() {
         printf("PULL FAILED\n");
     }
 }
+//2-4<행동>
 void rest() {
     printf("dongseok rest...\n");
     printf("dongseok: %d(stamina: %d->%d, aggro: %d -> %d)\n", dongseokPos, stamina, (stamina < MAX_STM) ? stamina + 1 : stamina, dongseokAggro, (dongseokAggro > MIN_AGGRO) ? dongseokAggro - 1 : dongseokAggro);
     stamina = (stamina < MAX_STM) ? stamina + 1 : stamina;
     dongseokAggro = (dongseokAggro > MIN_AGGRO) ? dongseokAggro - 1 : dongseokAggro;
 }
-
+//2-4<행동>
 void provoke() {
     printf("dongseok provoked zombie\n");
     printf("dongseok: %d((aggro: %d-> %d, stamina: %d)\n", dongseokPos, dongseokAggro, MAX_AGGRO, stamina);
     dongseokAggro = MAX_AGGRO;
 }
-
+//2-4<행동>
 void pull() {
     printf("dongseok tried to pull zombie\n");
     dongseokAggro += 2;
